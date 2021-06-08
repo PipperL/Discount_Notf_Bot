@@ -39,7 +39,7 @@
 
 1. - chat_id
 
-   - goods
+   - prods
      1. - prod_name
         - url
         - price

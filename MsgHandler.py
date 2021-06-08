@@ -4,8 +4,9 @@ import time
 import logging
 import telegram
 from pprint import pprint
-from telegram import Update
+from telegram import Update, MessageEntity, InlineKeyboardMarkup
 from telegram.ext import CallbackContext
+from CmdHandler import CmdHandler
 
 #%%
 logger = logging.getLogger(__name__)
@@ -61,7 +62,14 @@ def help_cmd(update: Update, context: CallbackContext):
 #%%
 def add_cmd(update: Update, context: CallbackContext):
     
-    re_msg = ' '
+    #markup = telegram.InlineKeyboardMarkup([[telegram.InlineKeyboardButton('pre', callback_data='help test')]], )
+    
+    add_url = update.message.text.split()[1]
+    if 'https:' in add_url:
+        add_handle = CmdHandler(update.message.chat_id, url=add_url)
+        
+        
+    re_msg = '成功加入囉'
     update.message.reply_text(re_msg)
     
 #%%
