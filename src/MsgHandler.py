@@ -63,14 +63,18 @@ def help_cmd(update: Update, context: CallbackContext):
 def add_cmd(update: Update, context: CallbackContext):
     
     #markup = telegram.InlineKeyboardMarkup([[telegram.InlineKeyboardButton('pre', callback_data='help test')]], )
+    context.bot.send_chat_action(chat_id = update.message.chat_id, action = telegram.ChatAction.TYPING)
     
-    add_url = update.message.text.split()[1]
-    if 'https:' in add_url:
-        add_handle = CmdHandler(update.message.chat_id, url=add_url)
-        
-        
-    re_msg = '成功加入囉'
-    update.message.reply_text(re_msg)
+    try:
+        add_new_url = update.message.text.split()[1]
+        if 'https:' in add_new_url:
+            add_handle = CmdHandler(update.message.chat_id, url=add_new_url)
+            re_msg = add_handle.add_url()
+    
+    except IndexError:
+        re_msg = '記得加上商品網址喔'
+    
+    update.message.reply_text(re_msg, disable_web_page_preview=True)
     
 #%%
 def del_cmd(update: Update, context: CallbackContext):
