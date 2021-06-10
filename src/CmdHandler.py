@@ -58,7 +58,7 @@ class CmdHandler:
             re_msg = '請貼 24pchome 或是 momo 的 商品頁面 喔'
             return re_msg
         
-        replace_list = ['-', '(', ')']
+        replace_list = ['-', '(', ')', '[', ']']
         for c in replace_list:
             prod_name = prod_name.replace(c, '\\' + c)
         

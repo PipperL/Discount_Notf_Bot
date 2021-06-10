@@ -2,7 +2,7 @@
 import json
 import logging
 from telegram.ext import Updater, Filters, CommandHandler, MessageHandler
-from MsgHandler import start_cmd, help_cmd, add_cmd, del_cmd, list_cmd, exp_msg, error_callback
+from MsgReplyer import start_cmd, help_cmd, add_cmd, del_cmd, list_cmd, exp_msg, error_callback
 
 #%%
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -35,4 +35,3 @@ if __name__ == '__main__':
     logger.info('Listening')
     
     updater.idle()
-    

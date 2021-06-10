@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 
 #%%
 def start_cmd(update: Update, context: CallbackContext):
-    
+
     context.bot.send_chat_action(chat_id = update.message.chat_id, action = telegram.ChatAction.TYPING)
     time.sleep(1)
     
@@ -40,7 +40,7 @@ def help_cmd(update: Update, context: CallbackContext):
         re_msg = '首先 先用這個查查歷史最低價來決定要不要等特價吧\n'
         update.message.reply_text(re_msg, reply_markup=markup)
         
-        context.bot.send_chat_action(chat_id = update.message.chat_id, action = telegram.ChatAction.TYPING)
+        context.bot.send_chat_action(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
         time.sleep(1)
         
         re_msg = '若確定要等請看下面\n/add 用來新增商品頁面\n'
@@ -67,7 +67,7 @@ def help_cmd(update: Update, context: CallbackContext):
         for msg in re_msgs:
             if msg: 
                 update.message.reply_text(msg)
-    
+
 #%%
 def add_cmd(update: Update, context: CallbackContext):
     
@@ -104,7 +104,7 @@ def list_cmd(update: Update, context: CallbackContext):
     update.message.reply_markdown_v2('momoshop:\n' + momoshop_re_msg, disable_web_page_preview=True)
 
 #%%
-def msg_exp(update, context):
+def exp_msg(update, context):
     
     pass
 
