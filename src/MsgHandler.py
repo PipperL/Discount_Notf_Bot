@@ -1,10 +1,8 @@
 #%%
-import json
 import time
 import logging
 import telegram
-from pprint import pprint
-from telegram import Update, MessageEntity, InlineKeyboardMarkup
+from telegram import Update, InlineKeyboardMarkup
 from telegram.ext import CallbackContext
 from CmdHandler import CmdHandler
 
@@ -17,7 +15,7 @@ def start_cmd(update: Update, context: CallbackContext):
     context.bot.send_chat_action(chat_id = update.message.chat_id, action = telegram.ChatAction.TYPING)
     time.sleep(1)
     
-    re_msg = '這是專門用來追蹤商品價格的機器人\n會在特價時通知你'
+    re_msg = '這是專門用來追蹤商品價格的機器人\n會在特價時通知你\n/help 看更多資訊'
     update.message.reply_text(re_msg)
     
     context.bot.send_chat_action(chat_id = update.message.chat_id, action = telegram.ChatAction.TYPING)
@@ -31,15 +29,27 @@ def help_cmd(update: Update, context: CallbackContext):
     
     context.bot.send_chat_action(chat_id = update.message.chat_id, action = telegram.ChatAction.TYPING)
     time.sleep(1)
-    
-    re_msgs = [None] * 2
-    re_msgs[0] ='/add 用來新增商品頁面\n'
-    re_msgs[0] += '/del 用來刪除追蹤的商品頁面\n'
-    re_msgs[0] += '/list 會列出所有的商品\n'
-    re_msgs[0] += '若想看更多細項請 /help add or del or list'
-    
     msg_sep = update.message.text.split(' ')
-    if len(msg_sep) >= 2:
+    re_msgs = [None] * 2
+    
+    if len(msg_sep) == 1:
+        markup = telegram.InlineKeyboardMarkup(
+            [[telegram.InlineKeyboardButton('電商歷史價格查詢', url='https://twbuyer.info/')]]
+            )
+        
+        re_msg = '首先 先用這個查查歷史最低價來決定要不要等特價吧\n'
+        update.message.reply_text(re_msg, reply_markup=markup)
+        
+        context.bot.send_chat_action(chat_id = update.message.chat_id, action = telegram.ChatAction.TYPING)
+        time.sleep(1)
+        
+        re_msg = '若確定要等請看下面\n/add 用來新增商品頁面\n'
+        re_msg += '/del 用來刪除追蹤的商品頁面\n'
+        re_msg += '/list 會列出所有的商品\n'
+        re_msg += '若想看更多細項請 /help add / del / list'
+        update.message.reply_text(re_msg)
+        
+    elif len(msg_sep) >= 2:
         if msg_sep[1] == 'add':
             re_msgs[0] = '範例: /add https://24h.pchome.com.tw/prod/DCAYKO-A90090S6A'
             
@@ -47,22 +57,21 @@ def help_cmd(update: Update, context: CallbackContext):
             re_msgs[0] = '範例: /del 耳機\n'
             re_msgs[0] += '這樣就會把所有商品名稱中包含耳機的全部刪掉喔'
             re_msgs[1] = '如果忘了自己到底加了什麼\n'
-            re_msgs[1] += '那就直接 /del 就會列出來囉'
+            re_msgs[1] += '那就直接 /del 就會列出來囉\n'
+            re_msgs[1] += '接著點選就會刪除了'
             
         elif msg_sep[1] == 'list':
             re_msgs[0] = '範例: /list\n'
             re_msgs[0] += '就會自動列出囉'
-            re_msgs[1] = '如果想針對電商進行查詢\n'
-            re_msgs[1] += '那就 /list 24pchome or momo'
             
-    for msg in re_msgs:
-        if msg: 
-            update.message.reply_text(msg)
+        for msg in re_msgs:
+            if msg: 
+                update.message.reply_text(msg)
     
 #%%
 def add_cmd(update: Update, context: CallbackContext):
     
-    #markup = telegram.InlineKeyboardMarkup([[telegram.InlineKeyboardButton('pre', callback_data='help test')]], )
+    update.message.reply_text('請稍等')
     context.bot.send_chat_action(chat_id = update.message.chat_id, action = telegram.ChatAction.TYPING)
     
     try:
@@ -74,10 +83,13 @@ def add_cmd(update: Update, context: CallbackContext):
     except IndexError:
         re_msg = '記得加上商品網址喔'
     
-    update.message.reply_text(re_msg, disable_web_page_preview=True)
+    update.message.reply_markdown_v2(re_msg, disable_web_page_preview=True)
     
 #%%
 def del_cmd(update: Update, context: CallbackContext):
+    
+    #markup = telegram.InlineKeyboardMarkup([[telegram.InlineKeyboardButton('pre', callback_data='help test')]], )
+    context.bot.send_chat_action(chat_id = update.message.chat_id, action = telegram.ChatAction.TYPING)
     
     re_msg = ' '
     update.message.reply_text(re_msg)
@@ -85,10 +97,22 @@ def del_cmd(update: Update, context: CallbackContext):
 #%%
 def list_cmd(update: Update, context: CallbackContext):
     
-    re_msg = ' '
-    update.message.reply_text(re_msg)
+    list_handle = CmdHandler(update.message.chat_id)
+    pchome_re_msg, momoshop_re_msg = list_handle.pords_list()
+    
+    update.message.reply_markdown_v2('24hPChome:\n' + pchome_re_msg, disable_web_page_preview=True)
+    update.message.reply_markdown_v2('momoshop:\n' + momoshop_re_msg, disable_web_page_preview=True)
 
 #%%
 def msg_exp(update, context):
     
     pass
+
+#%%
+def error_callback(update, context):
+    
+    try:
+        raise context.error
+        
+    except Exception as e:
+        logger.error(e)

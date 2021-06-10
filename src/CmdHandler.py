@@ -2,11 +2,6 @@
 import os
 import logging
 import json
-from selenium import webdriver
-from selenium.webdriver.firefox.options import Options
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 from ECommHandler import ECommHandler
 
 #%%
@@ -53,16 +48,22 @@ class CmdHandler:
         
         if '24h.pchome' and 'prod' in self.url:              
             prod_name, prod_price = ECommHandler(self.url).pchome()
+            ecomm_store = '24hpchome'
                 
         elif 'momoshop' and 'goods' in self.url:
-            print(self.url)
             prod_name, prod_price = ECommHandler(self.url).momoshop()
+            ecomm_store = 'momoshop'
             
         else:
             re_msg = '請貼 24pchome 或是 momo 的 商品頁面 喔'
             return re_msg
         
-        self.prods.append({'name': prod_name, 
+        replace_list = ['-', '(', ')']
+        for c in replace_list:
+            prod_name = prod_name.replace(c, '\\' + c)
+        
+        self.prods.append({'name': prod_name,
+                           'store': ecomm_store,
                            'price': prod_price,
                            'url': self.url})
         self.user_data['prods'] = self.prods
@@ -73,3 +74,32 @@ class CmdHandler:
         
         re_msg = prod_name + ' 已成功加入囉'
         return re_msg
+    
+    #%% 
+    def pords_list(self):
+        
+        pchome_list = list()
+        momoshop_list = list()
+        pchome_msg = ''
+        momoshop_msg = ''
+        
+        for prod in self.prods:
+            if prod['store'] == '24hpchome':
+                pchome_list.append('[' + prod['name'] + '](' + prod['url'] + ')')
+            
+            elif prod['store'] == 'momoshop':
+                momoshop_list.append('[' + prod['name'] + '](' + prod['url'] + ')')
+        
+        for i, link_text in enumerate(pchome_list):
+            pchome_msg += link_text
+            
+            if i != len(pchome_list)-1:
+                pchome_msg += '\n'
+        
+        for i, link_text in enumerate(momoshop_list):
+            momoshop_msg += link_text
+            
+            if i != len(momoshop_list)-1:
+                momoshop_msg += '\n'
+        
+        return pchome_msg, momoshop_msg

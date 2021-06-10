@@ -1,9 +1,8 @@
 #%%
 import json
 import logging
-from telegram import Update
-from telegram.ext import Updater, Filters, CommandHandler, MessageHandler, CallbackContext
-from MsgHandler import start_cmd, help_cmd, add_cmd, del_cmd, list_cmd, msg_exp
+from telegram.ext import Updater, Filters, CommandHandler, MessageHandler
+from MsgHandler import start_cmd, help_cmd, add_cmd, del_cmd, list_cmd, exp_msg, error_callback
 
 #%%
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -21,7 +20,7 @@ if __name__ == '__main__':
     dispatcher = updater.dispatcher
     
     # ignore edit
-    dispatcher.add_handler(MessageHandler(Filters.update.edited_message, msg_exp))
+    dispatcher.add_handler(MessageHandler(Filters.update.edited_message, exp_msg))
     
     # Command
     dispatcher.add_handler(CommandHandler('start', start_cmd))
@@ -29,6 +28,8 @@ if __name__ == '__main__':
     dispatcher.add_handler(CommandHandler('add', add_cmd))
     dispatcher.add_handler(CommandHandler('del', del_cmd))
     dispatcher.add_handler(CommandHandler('list', list_cmd))
+    
+    dispatcher.add_error_handler(error_callback)
     
     updater.start_polling()
     logger.info('Listening')
