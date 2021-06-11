@@ -10,10 +10,10 @@ logger = logging.getLogger(__name__)
 #%%
 class CmdHandler:
 
-    def __init__(self, chat_id, text=None, url=None):
+    def __init__(self, chat_id, keyword=None, url=None):
         
         self.chat_id = chat_id
-        self.text = text
+        self.keyword = keyword
         self.url = url
         self.prods = list()
         
@@ -66,17 +66,19 @@ class CmdHandler:
                            'store': ecomm_store,
                            'price': prod_price,
                            'url': self.url})
-        self.user_data['prods'] = self.prods
-        
-        path = './json/' + str(self.chat_id) + '.json'
-        with open(path, 'w') as json_file:
-            json.dump(self.user_data, json_file)
+
+        self.write_back()
+        # self.user_data['prods'] = self.prods
+        #
+        # path = './json/' + str(self.chat_id) + '.json'
+        # with open(path, 'w') as json_file:
+        #     json.dump(self.user_data, json_file)
         
         re_msg = prod_name + ' 已成功加入囉'
         return re_msg
     
     #%% 
-    def pords_list(self):
+    def prods_list(self):
         
         pchome_list = list()
         momoshop_list = list()
@@ -103,3 +105,27 @@ class CmdHandler:
                 momoshop_msg += '\n'
         
         return pchome_msg, momoshop_msg
+
+    def del_by_keyword(self):
+
+        num_del = 0
+        self.keyword = self.keyword.lower()
+        for i, prod in enumerate(self.prods):
+            if self.keyword in prod['name'].lower():
+                del self.prods[i]
+                num_del += 1
+
+        if num_del:
+            self.write_back()
+            re_msg = f'已刪除 {num_del} 項追蹤商品'
+        else:
+            re_msg = '追蹤商品中並沒有包含此關鍵字的商品喔'
+        return re_msg
+
+    def write_back(self):
+
+        self.user_data['prods'] = self.prods
+
+        path = './json/' + str(self.chat_id) + '.json'
+        with open(path, 'w') as json_file:
+            json.dump(self.user_data, json_file)

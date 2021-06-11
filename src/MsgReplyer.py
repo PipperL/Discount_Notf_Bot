@@ -6,10 +6,10 @@ from telegram import Update, InlineKeyboardMarkup
 from telegram.ext import CallbackContext
 from CmdHandler import CmdHandler
 
-#%%
+
 logger = logging.getLogger(__name__)
 
-#%%
+
 def start_cmd(update: Update, context: CallbackContext):
 
     context.bot.send_chat_action(chat_id = update.message.chat_id, action = telegram.ChatAction.TYPING)
@@ -24,7 +24,7 @@ def start_cmd(update: Update, context: CallbackContext):
     re_msg = '目前僅支援24pchome和momo喔\n現在先嘗試加入一個商品頁面的網址看看吧\n/add https://xxxxxx'
     update.message.reply_text(re_msg)
     
-#%%
+
 def help_cmd(update: Update, context: CallbackContext):
     
     context.bot.send_chat_action(chat_id = update.message.chat_id, action = telegram.ChatAction.TYPING)
@@ -68,7 +68,7 @@ def help_cmd(update: Update, context: CallbackContext):
             if msg: 
                 update.message.reply_text(msg)
 
-#%%
+
 def add_cmd(update: Update, context: CallbackContext):
     
     update.message.reply_text('請稍等')
@@ -85,30 +85,43 @@ def add_cmd(update: Update, context: CallbackContext):
     
     update.message.reply_markdown_v2(re_msg, disable_web_page_preview=True)
     
-#%%
+
 def del_cmd(update: Update, context: CallbackContext):
-    
-    #markup = telegram.InlineKeyboardMarkup([[telegram.InlineKeyboardButton('pre', callback_data='help test')]], )
-    context.bot.send_chat_action(chat_id = update.message.chat_id, action = telegram.ChatAction.TYPING)
-    
-    re_msg = ' '
+
+    del_keyword = update.message.text.split()
+    if len(del_keyword) == 1:
+        # InlineKeyboard
+        # reply_markup = telegram.InlineKeyboardMarkup([[telegram.InlineKeyboardButton('momo', callback_data='del momo'),
+        #                                                telegram.InlineKeyboardButton('pchome', callback_data='del pchome')]], )
+        # re_msg = '請問想要刪掉哪間電商的追蹤商品呢？'
+        # update.message.reply_text(re_msg, reply_markup=reply_markup)
+        re_msg = '請在 /del 後輸入想刪掉的商品關鍵字'
+
+    elif len(del_keyword) == 2:
+        del_keyword = del_keyword[1]
+        logger.info(f'will del {del_keyword}')
+        del_handle = CmdHandler(update.message.chat_id, keyword=del_keyword)
+        re_msg = del_handle.del_by_keyword()
+
     update.message.reply_text(re_msg)
-    
-#%%
+
+    #context.bot.send_chat_action(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
+
+
 def list_cmd(update: Update, context: CallbackContext):
     
     list_handle = CmdHandler(update.message.chat_id)
-    pchome_re_msg, momoshop_re_msg = list_handle.pords_list()
+    pchome_re_msg, momoshop_re_msg = list_handle.prods_list()
     
     update.message.reply_markdown_v2('24hPChome:\n' + pchome_re_msg, disable_web_page_preview=True)
     update.message.reply_markdown_v2('momoshop:\n' + momoshop_re_msg, disable_web_page_preview=True)
 
-#%%
+
 def exp_msg(update, context):
     
     pass
 
-#%%
+
 def error_callback(update, context):
     
     try:

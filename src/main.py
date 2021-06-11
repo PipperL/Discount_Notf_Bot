@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 #%%
 if __name__ == '__main__':
     
-    with open ('Token.json', 'r') as json_file:
+    with open('Token.json', 'r') as json_file:
         data = json.load(json_file)
     TOKEN = data['token']
     
@@ -33,5 +33,6 @@ if __name__ == '__main__':
     
     updater.start_polling()
     logger.info('Listening')
+
     
     updater.idle()
