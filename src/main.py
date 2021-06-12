@@ -28,10 +28,12 @@ if __name__ == '__main__':
     # Command
     dispatcher.add_handler(CommandHandler('start', start_cmd))
     dispatcher.add_handler(CommandHandler('help', help_cmd))
-    dispatcher.add_handler(CommandHandler('add', add_cmd))
+    # dispatcher.add_handler(CommandHandler('add', add_cmd))
     dispatcher.add_handler(CommandHandler('del', del_cmd))
     dispatcher.add_handler(CommandHandler('list', list_cmd))
-    
+
+    dispatcher.add_handler(MessageHandler(Filters.text & (Filters.entity('url')), add_cmd))
+
     dispatcher.add_error_handler(error_callback)
     
     updater.start_polling()

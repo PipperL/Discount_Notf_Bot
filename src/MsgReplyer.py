@@ -21,7 +21,7 @@ def start_cmd(update: Update, context: CallbackContext):
     context.bot.send_chat_action(chat_id = update.message.chat_id, action = telegram.ChatAction.TYPING)
     time.sleep(1)
     
-    re_msg = '目前僅支援24pchome和momo喔\n現在先嘗試加入一個商品頁面的網址看看吧\n/add https://xxxxxx'
+    re_msg = '目前僅支援24pchome和momo喔\n現在先嘗試加入一個商品頁面的網址看看吧\n只要直接貼上商品網址就好了喔'
     update.message.reply_text(re_msg)
     
 
@@ -50,10 +50,11 @@ def help_cmd(update: Update, context: CallbackContext):
         update.message.reply_text(re_msg)
         
     elif len(msg_sep) >= 2:
-        if msg_sep[1] == 'add':
-            re_msgs[0] = '範例: /add https://24h.pchome.com.tw/prod/DCAYKO-A90090S6A'
-            
-        elif msg_sep[1] == 'del':
+
+        # if msg_sep[1] == 'add':
+        #     update.message.reply_text('範例: https://24h.pchome.com.tw/prod/DCAYKO-A90090S6A')
+
+        if msg_sep[1] == 'del':
             re_msgs[0] = '範例: /del 耳機\n'
             re_msgs[0] += '這樣就會把所有商品名稱中包含耳機的全部刪掉喔'
             re_msgs[1] = '如果忘了自己到底加了什麼\n'
@@ -63,7 +64,10 @@ def help_cmd(update: Update, context: CallbackContext):
         elif msg_sep[1] == 'list':
             re_msgs[0] = '範例: /list\n'
             re_msgs[0] += '就會自動列出囉'
-            
+
+        else:
+            re_msgs[0] = '無此指令喔'
+
         for msg in re_msgs:
             if msg: 
                 update.message.reply_text(msg)
@@ -74,14 +78,15 @@ def add_cmd(update: Update, context: CallbackContext):
     update.message.reply_text('請稍等')
     context.bot.send_chat_action(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
     
-    try:
-        add_new_url = update.message.text.split()[1]
-        if 'https:' in add_new_url:
-            add_handle = CmdHandler(update.message.chat_id, url=add_new_url)
-            re_msg = add_handle.add_url()
+    # try:
+    #     add_new_url = update.message.text.split()
+    add_new_url = update.message.text
+    if 'https:' in add_new_url:
+        add_handle = CmdHandler(update.message.chat_id, url=add_new_url)
+        re_msg = add_handle.add_url()
     
-    except IndexError:
-        re_msg = '記得加上商品網址喔'
+    # except IndexError:
+    #     re_msg = '記得加上商品網址喔'
     
     update.message.reply_markdown_v2(re_msg, disable_web_page_preview=True)
     
