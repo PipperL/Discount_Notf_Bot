@@ -1,5 +1,6 @@
 #%%
 import logging
+import re
 from selenium import webdriver
 from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.common.by import By
@@ -21,7 +22,7 @@ class ECommHandler:
     
     #%%
     def pchome(self):
-    
+
         self.driver.get(self.url)
         
         try:
@@ -46,7 +47,8 @@ class ECommHandler:
     
     #%%
     def momoshop(self):
-        
+
+
         self.driver.get(self.url)
         
         try:
@@ -69,3 +71,11 @@ class ECommHandler:
         self.driver.quit()
         
         return prod_name, int(prod_price)
+
+
+if __name__ == '__main__':
+
+    url = 'https://www.momoshop.com.tw/goods/GoodsDetail.jsp?mdiv=ghostShopCart&i_code=5681462'
+    url = re.split('\?|&', url)
+
+    print(url)

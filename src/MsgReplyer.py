@@ -72,7 +72,7 @@ def help_cmd(update: Update, context: CallbackContext):
 def add_cmd(update: Update, context: CallbackContext):
     
     update.message.reply_text('請稍等')
-    context.bot.send_chat_action(chat_id = update.message.chat_id, action = telegram.ChatAction.TYPING)
+    context.bot.send_chat_action(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
     
     try:
         add_new_url = update.message.text.split()[1]

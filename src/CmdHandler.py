@@ -1,4 +1,5 @@
 #%%
+import re
 import os
 import logging
 import json
@@ -23,7 +24,11 @@ class CmdHandler:
         
         except FileExistsError:
             pass
-        
+
+        # dill with url
+        if self.url:
+            self.get_pc_type_url()
+
         # Check if the user file exists
         try:
             path = './json/' + str(self.chat_id) + '.json'
@@ -37,8 +42,23 @@ class CmdHandler:
             self.user_data['prods'] = list()
             with open(path, 'w') as json_file:
                 json.dump(self.user_data, json_file)
-    
-    #%%
+
+    def get_pc_type_url(self):
+
+        if '24h.m.pchome' in self.url:
+            self.url = self.url.replace('24h.m.pchome', '24h.pchome')
+
+        elif 'momoshop' in self.url:
+
+            momo_basic_url = 'https://www.momoshop.com.tw/goods/GoodsDetail.jsp?'
+            url_split = re.split('\?|&', self.url)
+
+            for url_part in url_split:
+                if 'i_code=' in url_part:
+                    i_code = url_part
+
+            self.url = momo_basic_url + i_code
+
     def add_url(self):
         
         for prod in self.prods:
@@ -58,7 +78,7 @@ class CmdHandler:
             re_msg = '請貼 24pchome 或是 momo 的 商品頁面 喔'
             return re_msg
         
-        replace_list = ['-', '(', ')', '[', ']']
+        replace_list = ['-', '(', ')', '[', ']', '+']
         for c in replace_list:
             prod_name = prod_name.replace(c, '\\' + c)
         
@@ -76,8 +96,7 @@ class CmdHandler:
         
         re_msg = prod_name + ' 已成功加入囉'
         return re_msg
-    
-    #%% 
+
     def prods_list(self):
         
         pchome_list = list()
@@ -91,7 +110,7 @@ class CmdHandler:
             
             elif prod['store'] == 'momoshop':
                 momoshop_list.append('[' + prod['name'] + '](' + prod['url'] + ')')
-        
+
         for i, link_text in enumerate(pchome_list):
             pchome_msg += link_text
             
@@ -103,7 +122,7 @@ class CmdHandler:
             
             if i != len(momoshop_list)-1:
                 momoshop_msg += '\n'
-        
+
         return pchome_msg, momoshop_msg
 
     def del_by_keyword(self):
