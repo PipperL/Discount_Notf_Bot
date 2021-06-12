@@ -9,7 +9,7 @@ from MsgReplyer import start_cmd, help_cmd, add_cmd, del_cmd, list_cmd, exp_msg,
 
 #%%
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-                    level=logging.INFO)
+                    level=logging.WARNING)
 logger = logging.getLogger(__name__)
 
 #%%
@@ -33,6 +33,7 @@ if __name__ == '__main__':
     dispatcher.add_handler(CommandHandler('list', list_cmd))
 
     dispatcher.add_handler(MessageHandler(Filters.text & (Filters.entity('url')), add_cmd))
+    dispatcher.add_handler(MessageHandler(~Filters.command & ~Filters.text, exp_msg))
 
     dispatcher.add_error_handler(error_callback)
     

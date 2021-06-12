@@ -45,7 +45,11 @@ class NotifyThread(threading.Thread):
                          + ' 現在特價 ' + str(prod['price']) + '元'
                 context.bot.send_message(self.chat_id, re_msg, parse_mode='MarkdownV2')
 
+            elif new_prod_price > prod['price']:
+                prod['price'] = new_prod_price
+
         self.driver.quit()
+        self.write_back()
         logger.info(threading.currentThread().name + ' finish work')
 
     def get_new_price(self, url):

@@ -122,9 +122,13 @@ def list_cmd(update: Update, context: CallbackContext):
     update.message.reply_markdown_v2('momoshop:\n' + momoshop_re_msg, disable_web_page_preview=True)
 
 
-def exp_msg(update, context):
-    
-    pass
+def exp_msg(update: Update, context):
+
+    if update.edited_message:
+        return
+
+    else:
+        context.bot.send_message(update.effective_chat.id, '不要玩我')
 
 
 def error_callback(update, context):
@@ -133,4 +137,4 @@ def error_callback(update, context):
         raise context.error
         
     except Exception as e:
-        logger.error(e)
+        logger.error(str(update.message.chat_id) + ' ' + str(e))
