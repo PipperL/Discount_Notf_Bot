@@ -1,6 +1,9 @@
 #%%
+import os
 import json
 import logging
+import time
+from Notification import NotifyThread
 from telegram.ext import Updater, Filters, CommandHandler, MessageHandler
 from MsgReplyer import start_cmd, help_cmd, add_cmd, del_cmd, list_cmd, exp_msg, error_callback
 
@@ -34,5 +37,13 @@ if __name__ == '__main__':
     updater.start_polling()
     logger.info('Listening')
 
-    
+    path = './json'
+    while(True):
+        json_files = os.listdir(path)
+        for file in json_files:
+            user_data_path = os.path.join(path, file)
+            NotifyThread(dispatcher, user_data_path).start()
+
+        time.sleep(3600)
+
     updater.idle()

@@ -27,7 +27,7 @@ def start_cmd(update: Update, context: CallbackContext):
 
 def help_cmd(update: Update, context: CallbackContext):
     
-    context.bot.send_chat_action(chat_id = update.message.chat_id, action = telegram.ChatAction.TYPING)
+    context.bot.send_chat_action(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
     time.sleep(1)
     msg_sep = update.message.text.split(' ')
     re_msgs = [None] * 2
