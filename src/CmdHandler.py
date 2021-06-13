@@ -27,7 +27,7 @@ class CmdHandler:
 
         # dill with url
         if self.url:
-            self.get_pc_type_url()
+            self.get_fixed_type_url()
 
         # Check if the user file exists
         try:
@@ -43,10 +43,11 @@ class CmdHandler:
             with open(path, 'w') as json_file:
                 json.dump(self.user_data, json_file)
 
-    def get_pc_type_url(self):
+    def get_fixed_type_url(self):
 
-        if '24h.m.pchome' in self.url:
+        if 'pchome' in self.url:
             self.url = self.url.replace('24h.m.pchome', '24h.pchome')
+            self.url = re.split('\?', self.url)[0]
 
         elif 'momoshop' in self.url:
 

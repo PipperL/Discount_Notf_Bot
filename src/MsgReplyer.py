@@ -137,4 +137,5 @@ def error_callback(update, context):
         raise context.error
         
     except Exception as e:
-        logger.error(str(update.message.chat_id) + ' ' + str(e))
+        e = str(e)
+        logger.error(str(update.message.chat_id) + ' ' + e)
