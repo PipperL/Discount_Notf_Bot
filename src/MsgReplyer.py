@@ -47,7 +47,7 @@ def help_cmd(update: Update, context: CallbackContext):
         re_msgs[0] += '範例如下：\n'
         re_msgs[0] += 'https://www.momoshop.com.tw/goods/GoodsDetail.jsp?mdiv=ghostShopCart&i_code=5681462\n\n'
         re_msgs[0] += 'https://24h.pchome.com.tw/prod/DCAYKO-A90090S6A\n'
-        re_msgs[1] = 'momo的網址務必包含 momoshop 和 goods\npchome的網址務必包含 pchome 和 prod\n其他都可以無視\n'
+        re_msgs[1] = 'momo的網址務必包含 momoshop, goods\npchome的網址務必包含 24h, pchome, prod\n'
         re_msgs[1] += '網址中含 m 代表手機版網頁，是可以無視的\n請放心使用'
         for msg in re_msgs:
             if msg:

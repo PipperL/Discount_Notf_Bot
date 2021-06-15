@@ -7,14 +7,14 @@ from Notification import NotifyThread
 from telegram.ext import Updater, Filters, CommandHandler, MessageHandler
 from MsgReplyer import start_cmd, help_cmd, add_cmd, del_cmd, list_cmd, exp_msg, error_callback
 
-#%%
+
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                     filename='logger.log',
-                    filemode='w',
-                    level=logging.INFO)
+                    filemode='a',
+                    level=logging.WARNING)
 logger = logging.getLogger(__name__)
 
-#%%
+
 if __name__ == '__main__':
     
     with open('Token.json', 'r') as json_file:
@@ -45,13 +45,13 @@ if __name__ == '__main__':
     updater.start_polling()
     logger.info('Listening')
 
-    # path = './json'
-    # while True:
-    #     json_files = os.listdir(path)
-    #     for file in json_files:
-    #         user_data_path = os.path.join(path, file)
-    #         NotifyThread(dispatcher, user_data_path).start()
-    #
-    #     time.sleep(7200)
+    path = './json'
+    while True:
+        json_files = os.listdir(path)
+        for file in json_files:
+            user_data_path = os.path.join(path, file)
+            NotifyThread(dispatcher, user_data_path).start()
+
+        time.sleep(7200)
 
     updater.idle()
