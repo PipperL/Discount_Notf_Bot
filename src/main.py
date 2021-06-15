@@ -35,7 +35,7 @@ if __name__ == '__main__':
     dispatcher.add_handler(MessageHandler(Filters.text & (Filters.entity('url')), add_cmd))
     dispatcher.add_handler(MessageHandler(~Filters.command & ~Filters.text, exp_msg))
 
-    dispatcher.add_error_handler(error_callback)
+    # dispatcher.add_error_handler(error_callback)
     
     updater.start_polling()
     logger.info('Listening')

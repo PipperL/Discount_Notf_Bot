@@ -51,3 +51,6 @@
 2. - chat_id
    - ......
 
+# Debug
+
+1. deal with bot blocked -> del the user_info

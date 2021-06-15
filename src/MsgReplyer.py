@@ -43,7 +43,7 @@ def help_cmd(update: Update, context: CallbackContext):
         context.bot.send_chat_action(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
         time.sleep(1)
         
-        re_msg = '若確定要等請看下面\n/add 用來新增商品頁面\n'
+        re_msg = '若確定要等請看下面\n直接貼網址來新增商品頁面\n'
         re_msg += '/del 用來刪除追蹤的商品頁面\n'
         re_msg += '/list 會列出所有的商品\n'
         re_msg += '若想看更多細項請 /help add / del / list'
@@ -81,10 +81,10 @@ def add_cmd(update: Update, context: CallbackContext):
     # try:
     #     add_new_url = update.message.text.split()
     add_new_url = update.message.text
-    if 'https:' in add_new_url:
-        add_handle = CmdHandler(update.message.chat_id, url=add_new_url)
-        re_msg = add_handle.add_url()
-    
+    # if 'https:' in add_new_url:
+    add_handle = CmdHandler(update.message.chat_id, url=add_new_url)
+    re_msg = add_handle.add_url()
+
     # except IndexError:
     #     re_msg = '記得加上商品網址喔'
     

@@ -30,8 +30,8 @@ class CmdHandler:
             self.get_fixed_type_url()
 
         # Check if the user file exists
+        path = './json/' + str(self.chat_id) + '.json'
         try:
-            path = './json/' + str(self.chat_id) + '.json'
             with open(path, 'r') as json_file:
                 self.user_data = json.load(json_file)
                 self.prods = self.user_data['prods']
@@ -57,8 +57,8 @@ class CmdHandler:
             for url_part in url_split:
                 if 'i_code=' in url_part:
                     i_code = url_part
-
-            self.url = momo_basic_url + i_code
+                    self.url = momo_basic_url + i_code
+                    break
 
     def add_url(self):
 
@@ -83,7 +83,7 @@ class CmdHandler:
             re_msg = '請貼 24pchome 或是 momo 的 商品頁面 喔'
             return re_msg
         
-        replace_list = ['-', '(', ')', '[', ']', '+']
+        replace_list = ['-', '(', ')', '[', ']', '+', '.', '|', '_']
         for c in replace_list:
             prod_name = prod_name.replace(c, '\\' + c)
         
@@ -93,11 +93,6 @@ class CmdHandler:
                            'url': self.url})
 
         self.write_back()
-        # self.user_data['prods'] = self.prods
-        #
-        # path = './json/' + str(self.chat_id) + '.json'
-        # with open(path, 'w') as json_file:
-        #     json.dump(self.user_data, json_file)
         
         re_msg = prod_name + ' 已成功加入囉'
         return re_msg
