@@ -70,7 +70,7 @@ class CmdHandler:
             if self.url == prod['url']:
                 re_msg = '這個網址已經在追蹤列表裡囉'
                 return re_msg
-        
+
         if '24h.pchome' and 'prod' in self.url:              
             prod_name, prod_price = ECommHandler(self.url).pchome()
             ecomm_store = '24hpchome'
@@ -84,18 +84,22 @@ class CmdHandler:
             return re_msg
         
         replace_list = ['-', '(', ')', '[', ']', '+', '.', '|', '_']
-        for c in replace_list:
-            prod_name = prod_name.replace(c, '\\' + c)
-        
-        self.prods.append({'name': prod_name,
-                           'store': ecomm_store,
-                           'price': prod_price,
-                           'url': self.url})
+        if prod_name and prod_price:
+            for c in replace_list:
+                prod_name = prod_name.replace(c, '\\' + c)
 
-        self.write_back()
+            self.prods.append({'name': prod_name,
+                               'store': ecomm_store,
+                               'price': prod_price,
+                               'url': self.url})
+            self.write_back()
         
-        re_msg = prod_name + ' 已成功加入囉'
-        return re_msg
+            re_msg = prod_name + ' 已成功加入囉'
+            return re_msg
+
+        else:
+            re_msg = '請貼網址喔'
+            return re_msg
 
     def prods_list(self):
         

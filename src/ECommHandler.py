@@ -5,6 +5,7 @@ from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import InvalidArgumentException
 
 #%%
 logger = logging.getLogger(__name__)
@@ -18,12 +19,16 @@ class ECommHandler:
         self.driver = webdriver.Firefox(firefox_options=opts)
         self.WebWait = WebDriverWait(self.driver, 20)
         self.url = url
-    
+
     #%%
     def pchome(self):
 
-        self.driver.get(self.url)
-        
+        try:
+            self.driver.get(self.url)
+
+        except InvalidArgumentException:
+            return None, None
+
         try:
             prod_name = self.WebWait.until(
                 EC.visibility_of_element_located(
@@ -41,14 +46,18 @@ class ECommHandler:
             logger.info('still not found')
         
         self.driver.quit()
-            
+        logger.info('pchome selenium success')
         return prod_name, int(prod_price)
     
     #%%
     def momoshop(self):
 
-        self.driver.get(self.url)
-        
+        try:
+            self.driver.get(self.url)
+
+        except InvalidArgumentException:
+            return None, None
+
         try:
             prod_name = self.WebWait.until(
                 EC.visibility_of_element_located(
@@ -67,6 +76,6 @@ class ECommHandler:
             logger.info('still not found')
         
         self.driver.quit()
-        
+        logger.info('momo selenium success')
         return prod_name, int(prod_price)
 

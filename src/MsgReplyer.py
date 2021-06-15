@@ -43,10 +43,19 @@ def help_cmd(update: Update, context: CallbackContext):
         context.bot.send_chat_action(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
         time.sleep(1)
         
-        re_msg = '若確定要等請看下面\n直接貼網址來新增商品頁面\n'
-        re_msg += '/del 用來刪除追蹤的商品頁面\n'
+        re_msgs[0] = '若確定要等請看下面\n直接 貼網址 或 分享頁面 到此聊天室來新增追蹤商品\n'
+        re_msgs[0] += '範例如下：\n'
+        re_msgs[0] += 'https://www.momoshop.com.tw/goods/GoodsDetail.jsp?mdiv=ghostShopCart&i_code=5681462\n\n'
+        re_msgs[0] += 'https://24h.pchome.com.tw/prod/DCAYKO-A90090S6A\n'
+        re_msgs[1] = 'momo的網址務必包含 momoshop 和 goods\npchome的網址務必包含 pchome 和 prod\n其他都可以無視\n'
+        re_msgs[1] += '網址中含 m 代表手機版網頁，是可以無視的\n請放心使用'
+        for msg in re_msgs:
+            if msg:
+                update.message.reply_text(msg, disable_web_page_preview=True)
+
+        re_msg = '/del 用來刪除追蹤的商品頁面\n'
         re_msg += '/list 會列出所有的商品\n'
-        re_msg += '若想看更多細項請 /help add / del / list'
+        re_msg += '若想看更多細項請 /help del / list'
         update.message.reply_text(re_msg)
         
     elif len(msg_sep) >= 2:
@@ -81,6 +90,7 @@ def add_cmd(update: Update, context: CallbackContext):
     # try:
     #     add_new_url = update.message.text.split()
     add_new_url = update.message.text
+    print(add_new_url)
     # if 'https:' in add_new_url:
     add_handle = CmdHandler(update.message.chat_id, url=add_new_url)
     re_msg = add_handle.add_url()
@@ -88,12 +98,14 @@ def add_cmd(update: Update, context: CallbackContext):
     # except IndexError:
     #     re_msg = '記得加上商品網址喔'
     
-    update.message.reply_markdown_v2(re_msg, disable_web_page_preview=True)
+    update.message.reply_markdown_v2(re_msg)
+    logger.info('reply success')
     
 
 def del_cmd(update: Update, context: CallbackContext):
 
     del_keyword = update.message.text.split()
+    re_msg = ''
     if len(del_keyword) == 1:
         # InlineKeyboard
         # reply_markup = telegram.InlineKeyboardMarkup([[telegram.InlineKeyboardButton('momo', callback_data='del momo'),
@@ -108,9 +120,8 @@ def del_cmd(update: Update, context: CallbackContext):
         del_handle = CmdHandler(update.message.chat_id, keyword=del_keyword)
         re_msg = del_handle.del_by_keyword()
 
-    update.message.reply_text(re_msg)
-
-    #context.bot.send_chat_action(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
+    if re_msg:
+        update.message.reply_text(re_msg)
 
 
 def list_cmd(update: Update, context: CallbackContext):
@@ -128,7 +139,7 @@ def exp_msg(update: Update, context):
         return
 
     else:
-        context.bot.send_message(update.effective_chat.id, '不要玩我')
+        context.bot.send_message(update.effective_chat.id, '請貼商品網址喔\n若不清楚請 /help')
 
 
 def error_callback(update, context):
