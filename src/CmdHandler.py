@@ -61,7 +61,11 @@ class CmdHandler:
             self.url = momo_basic_url + i_code
 
     def add_url(self):
-        
+
+        if len(self.prods) >= 10:
+            re_msg = '你已加入十個商品囉'
+            return re_msg
+
         for prod in self.prods:
             if self.url == prod['url']:
                 re_msg = '這個網址已經在追蹤列表裡囉'

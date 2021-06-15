@@ -41,12 +41,12 @@ if __name__ == '__main__':
     logger.info('Listening')
 
     path = './json'
-    while(True):
+    while True:
         json_files = os.listdir(path)
         for file in json_files:
             user_data_path = os.path.join(path, file)
             NotifyThread(dispatcher, user_data_path).start()
 
-        time.sleep(3600)
+        time.sleep(7200)
 
     updater.idle()
